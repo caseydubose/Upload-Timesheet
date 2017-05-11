@@ -12,10 +12,10 @@ signin = str('https://login.salesforce.com/')
 # UserName = input()
 # print('What is your Password?')
 # Password = input()
-CompanyName = str('Raytheon Company')
+
 
 #import csv
-exampleFile = open('C:\\Users\\U0127576\Dropbox\Programming\Python\Create Users\\UserList.csv')
+exampleFile = open('C:\\Users\\U0127576\Dropbox\Programming\Python\Salesforce Timesheet\TimeEntries.csv')
 reader = csv.DictReader(exampleFile)
 credFile = open('C:\\Users\\U0127576\Dropbox\Programming\Python\Credentials\sfcreds.txt')
 cred_lines = credFile.readlines()
@@ -29,35 +29,28 @@ browser.find_by_id('password').first.fill(cred_lines[1])
 browser.find_by_id('username').first.fill(cred_lines[0])
 #browser.find_by_id('Login').first.click()
 
-
 #go to timeentry
-browser.visit(timeentry)
-
-
-
-#pick company DB
-browser.find_by_text(CompanyName).first.click()
-time.sleep(1)
-
-
-#Create User Loop
 for row in reader:
-        browser.visit(userscreen)
-        try:
-            alert = browser.get_alert()
-            alert.accept()
-        except Exception as e:
-            pass
-        browser.find_by_text("ACTIONS").first.click()
-        browser.find_link_by_partial_text('Company User').first.click()
-        browser.find_by_id('idTxtEMail').first.fill(row['EMAIL'])
-        browser.find_by_id('idtxtFirstName').first.fill(row['FIRST_NAME'])
-        browser.find_by_id('idtxtLastName').first.fill(row['LAST_NAME'])
-        office = browser.find_by_id('idcboCoOfficeID').first
-        office.select(row['OFFICEID'])
-        time.sleep(1)
-        #Click Save
-        #browser.find_by_text("ACTIONS").first.click()
-        #browser.find_link_by_partial_text('Save & Close').first.click()
-        with open("C:\\Users\\U0127576\Dropbox\Programming\Python\Create User\\UserLog.txt", "a") as myfile:
-            myfile.write(row['EMAIL'])
+    browser.visit(timeentry)
+    browser.find_by_id("CF00N37000006A1dD").first.fill(row['Project'])
+    browser.find_by_id('00N37000006A1dI').first.fill(row['Date'])
+    browser.find_by_id('00N37000006A1dN').first.fill(row['Time'])
+    browser.find_by_id('CF00N37000006ADRZ').first.click()
+    browser.find_by_id('CF00N37000006ADRZ').first.fill(row['User'])
+    browser.find_by_id('00N37000006A1dc').first.fill(row['Description'])
+    browser.find_by_id('00N37000006A1dS').first.click()
+    ServiceCat = row['Service Category']
+    Billable = str('Billable')
+    if ServiceCat != Billable:
+        browser.find_by_id('00N37000006A1dS').select(ServiceCat)
+        browser.find_by_id('00N37000006A1dX').select(row['Task'])
+        browser.find_by_name('save').first.click()
+    else:
+        browser.find_by_id('00N37000006A1dS').select(row['Service Category'])
+        browser.find_by_name('save').first.click()
+    time.sleep(3)
+    with open("C:\\Users\\U0127576\Dropbox\Programming\Python\Salesforce Timesheet\TimesheetLog.txt", "a") as myfile:
+        myfile.write(row['Project'] + " | " + row['Description'] + " | " + row['Date'])
+        myfile.write("\n")
+
+
