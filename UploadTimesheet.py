@@ -7,7 +7,15 @@ import csv
 # I haven't bothered with relative paths to the files yet so that'll need updates
 # as well as you'll need to create a cred file and define the absolute path.
 
+'''
+The TimeEntries.csv file that you will use to load your time entries must have the following columns
+Project, Date, Time (as a decimal, e.g. 1.2), User, Description, 
+Task (must be populated for Non-Billable and Operations items), 
+and Service Category (Billable, Non-Billable, Operations)
+'''
+
 #define variables
+#sfcreds.txt is a two line fine containing UN and Password.
 timeentry = str('https://na31.salesforce.com/a0M/e')
 
 signin = str('https://login.salesforce.com/')
